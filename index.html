@@ -11,6 +11,10 @@
       <input type="text" id="cityName" name="cityName" placeholder="Enter city name" autofocus>
       <input type="text" id="radius" name="radius" value="20" oninput="changeRadius()" >
     </div>
+    <div id="infowindow-content">
+      <img src="" width="16" height="16" id="place-icon">
+      <span id="place-coordinates"></span>
+    </div>
     <div id="map"></div>
     <script type="text/javascript" src="js/script.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCOYJfqGcP9DUNiO_Q8nsIZJ3S8r8lcdS4&libraries=places&callback=initMap"></script>

@@ -2,6 +2,7 @@ var map;
 var service;
 var marker;
 var cityCircle;
+var infowindow;
 
 function initMap() {
 
@@ -23,6 +24,18 @@ function initMap() {
     var place = autocomplete.getPlace();
     
     createMarker(place)
+
+    if (infowindow) infowindow.close();
+    infowindow = new google.maps.InfoWindow();
+    var infowindowContent = document.getElementById('infowindow-content');
+    infowindow.setContent(infowindowContent);
+    infowindowContent.children['place-icon'].src = place.icon;
+    infowindowContent.children['place-coordinates'].textContent = place.geometry.location;
+
+    google.maps.event.addListener(marker, 'click', function() {
+      infowindow.setContent(infowindowContent);
+      infowindow.open(map, this);
+    });
 
     if (!place.geometry) {
       // User entered the name of a Place that was not suggested and
