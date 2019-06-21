@@ -3,6 +3,7 @@ var service;
 var marker;
 var cityCircle;
 var infowindow;
+var hotelMarkers;
 
 function initMap() {
 
@@ -17,6 +18,8 @@ function initMap() {
   map.controls[google.maps.ControlPosition.TOP_RIGHT].push(inputForm);
 
   autocomplete.bindTo('bounds', map);
+
+  service = new google.maps.places.PlacesService(map);
 
   autocomplete.addListener('place_changed', function() {
     if (marker) {marker.setVisible(false);}
@@ -53,6 +56,37 @@ function initMap() {
     }
     marker.setPosition(place.geometry.location);
     marker.setVisible(true);
+
+    var hotelRequest = {
+      type: "lodging",
+      location: place.geometry.location,
+      radius: 50000
+    };
+
+    service.nearbySearch(hotelRequest, function(results, status, pagination){
+
+      if(hotelMarkers){
+        hotelMarkers.forEach(function(marker){
+          marker.setMap(null);
+        });
+      }
+
+      hotelMarkers = []
+      results.forEach(function(result) {
+        var hotelMarker = new google.maps.Marker({
+          position: result.geometry.location,
+          map: map,
+          icon: {
+            scaledSize: new google.maps.Size(16, 16),
+            url: result.icon,
+            origin: new google.maps.Point(0,0),
+            anchor: new google.maps.Point(0, 0)
+          }
+        });
+
+        hotelMarkers.push(hotelMarker);
+      });
+    });
   });
 }
 
@@ -63,11 +97,11 @@ function createMarker(place) {
   });
 
   cityCircle = new google.maps.Circle({
-      strokeColor: '#0000FF',
+      strokeColor: '#00B2FF',
       strokeOpacity: 0.8,
       strokeWeight: 2,
       fillColor: '#0000FF',
-      fillOpacity: 0.35,
+      fillOpacity: 0.15,
       map: map,
       center: place.geometry.location,
       radius: getRadius()
